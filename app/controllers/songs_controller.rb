@@ -1,25 +1,18 @@
 class SongsController < ApplicationController
 
 	def index
-		render json: Song.all
+		respond_to do |f|
+			f.html { render :index }
+			f.json { redirect_to api_v1_songs_path }
+		end
 	end
 
 	def show
-		render json: Song.find(params[:id])
-	end
-
-	def create
-		song = Song.create(song_params)
-		if song.save
-			render json: song
-		else
-			render json: song.errors, status: 500
+		respond_to do |f|
+			song = Song.find(params[:id])
+			f.html { render :show }
+			f.json { redirect_to api_v1_song_path(song)  }
 		end
 	end
-
-	private
-		def song_params
-			params.require(:song).permit(:title, :chart)
-		end
 
 end
